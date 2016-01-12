@@ -22,3 +22,34 @@ angular.module('starter', ['ionic'])
     }
   });
 })
+
+.controller( 'weatherCtrl', function($http){
+    var weather = this;
+  navigator.geolocation.getCurrentPosition(function (geopos){
+    var lat = geopos.coords.latitude;
+    var lon = geopos.coords.longitude;
+    var apikey = 'd679dd009502745611a44ae9f8f35978';
+    var url = '/api/forecast/' + apikey + '/' + lat + ',' + lon;
+    
+    $http.get(url).then(function(res){
+    
+      console.log("res", res );
+      // res.data.currently.temperature = weather.temp;
+      
+      weather.temp = parseInt(res.data.currently.temperature); 
+    });
+  });
+weather.temp = "--"
+  
+  // Could have used ng-resource call here, but Scott has warned us against this.
+});
+
+
+// .config(function ($stateProvider, $urlRouterProvider){
+//   $stateProvider.state('root',{
+//     url: '/',
+//     template: '<h1>Hello World</h1>'
+//   });
+//   $urlRouterProvider.otherwise('/');
+
+// })
