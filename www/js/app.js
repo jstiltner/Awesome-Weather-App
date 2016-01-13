@@ -24,48 +24,37 @@ angular.module('starter', ['ionic', 'angular-skycons'])
 })
 
 .controller( 'weatherCtrl', function($http){
-    var weather = this;
-  // navigator.geolocation.getCurrentPosition(function (geopos){
-    // var lat = geopos.coords.latitude;
-    // var lon = geopos.coords.longitude;
-    // var apikey = 'd679dd009502745611a44ae9f8f35978';
-    var url = 'http://api.wunderground.com/api/db2e52b4bf0f042b/conditions/q/autoip.json';
-    // var url = '/api/forecast/' + apikey + '/' + lat + ',' + lon;
-    var url2 = 'http://api.wunderground.com/api/db2e52b4bf0f042b/forecast/q/autoip.json';
-    
-    $http.get(url).then(function(res){
-    console.log("res.data.current_observation", res.data.current_observation );
-      weather.temp = res.data.current_observation.temp_f;
-      weather.city = res.data.current_observation.display_location.city; 
-      weather.icon = res.data.current_observation.icon_url; 
-      
-      // res.data.currently.temperature = weather.temp;
-      
-      // weather.temp = parseInt(res.data.currently.temperature); 
-      // weather.icon = res.data.currently.icon;
-      console.log("weather.icon", weather.icon);
-    });
-
-    $http.get(url2).then(function(res){
-      console.log("res2", res);
-    })
-
-
-
-
-
-  });
-// weather.temp = "--"
+   var weather = this;
+   var url = 'http://api.wunderground.com/api/db2e52b4bf0f042b/';
+   var ctag = 'conditions/q/autoip.json';
+   var ftag = 'forecast/q/autoip.json';
+   
+   function parseWUData (res){
+      var data = res.data.current_observation;
+      weather.temp = data.temp_f;
+      weather.city = data.display_location.city; 
+      city = weather.city
+      weather.icon = data.icon_url; 
+      return res;
+    };
   
-  // Could have used ng-resource call here, but Scott has warned us against this.
-// });
+  weather.search = function(){ 
+    $http
+      .get(url + 'conditions/q/' + weather.searchQuery+ '.json')
+      .then(parseWUData)
+      .then(function(res){ 
+        var history = JSON.parse(localStorage.getItem('searchHistory')) || {};
+        history[weather.city] = res.data.current_observation.station_id;
+        localStorage.setItem('searchHistory', JSON.stringify(history));
+      });
+   }
 
+   
 
-// .config(function ($stateProvider, $urlRouterProvider){
-//   $stateProvider.state('root',{
-//     url: '/',
-//     template: '<h1>Hello World</h1>'
-//   });
-//   $urlRouterProvider.otherwise('/');
+  $http.get(url + ctag).then(function(res){
+  parseWUData(res);   
+  });
 
-// })
+  $http.get(url + ftag).then(function(res){    
+  })
+});

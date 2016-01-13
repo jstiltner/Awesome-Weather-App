@@ -24,15 +24,31 @@
   </head>
   <body ng-app="starter">
 
-    <ion-pane>
+    <ion-pane ng-controller="weatherCtrl as weather">
+      
       <ion-header-bar class="bar-stable">
-        <h1 class="title">Awesome Weather App</h1>
+        <!-- <h1 class="title">Awesome Weather App</h1> -->
+      
+      <div class="bar bar-header item-input-inset">
+  <label class="item-input-wrapper">
+    <i class="icon ion-ios-search placeholder-icon"></i>
+    <input type="search" placeholder="Search" ng-model="weather.searchQuery">
+  </label>
+  <button class="button button-royal" ng-click="weather.search()">
+    Search
+  </button>
+</div>
       </ion-header-bar>
-      <ion-content ng-controller="weatherCtrl as weather">
+
+
+      <ion-content>
         <h1>{{weather.temp}}℉</h1>
         <h3>{{weather.city}}</h3>
         <!-- <skycon icon=weather.icon></skycon> -->
-        <img src={{weather.icon}}>
+        <img ng-src={{weather.icon}}>
+
+
+
         
       </ion-content>
     </ion-pane>
