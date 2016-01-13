@@ -30,7 +30,9 @@
       </ion-header-bar>
       <ion-content ng-controller="weatherCtrl as weather">
         <h1>{{weather.temp}}℉</h1>
-        <skycon icon=weather.icon></skycon>
+        <h3>{{weather.city}}</h3>
+        <!-- <skycon icon=weather.icon></skycon> -->
+        <img src={{weather.icon}}>
         
       </ion-content>
     </ion-pane>
